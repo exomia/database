@@ -41,19 +41,20 @@ class PostgreSQL : ADatabase<NpgsqlCommand>
 	        }
 	    }  
 	}
+	
 	public object GetColumnFromUser(string username, int column)
-    {
-        NpgsqlCommand cmd = Get(1, username);
-        using (NpgsqlDataReader reader = cmd.ExecuteReader())
-        {
-            if (!reader.HasRows) { return null; }
-            while (reader.Read())
-            {
-                return reader[column];
-            }
-        }
-        return null;
-    }
+	{
+		NpgsqlCommand cmd = Get(1, username);
+		using (NpgsqlDataReader reader = cmd.ExecuteReader())
+		{
+		    if (!reader.HasRows) { return null; }
+		    while (reader.Read())
+		    {
+			return reader[column];
+		    }
+		}
+		return null;
+	}
 }
 ```
 
