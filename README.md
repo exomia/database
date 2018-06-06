@@ -12,46 +12,46 @@ class PostgreSQL : ADatabase<NpgsqlCommand>
 	/// <inheritdoc />
 	protected override bool CreateConnection(out DbConnection connection)
 	{
-	    connection = new NpgsqlConnection("Server=127.0.0.1;Port=5432;Database=xyz;User Id=xyz;Password=******;");
-	    return true;
+		connection = new NpgsqlConnection("Server=127.0.0.1;Port=5432;Database=xyz;User Id=xyz;Password=******;");
+		return true;
 	}
 
 	/// <inheritdoc />
 	protected override void PrepareCommands()
 	{
-	    Add(1, "SELECT * FROM private.\"user\" WHERE \"username\" = @username LIMIT 1;", command =>
-	    {
-	        command.Parameters.Add("@username", NpgsqlDbType.Text);
-	    }, true);
+		Add(1, "SELECT * FROM private.\"user\" WHERE \"username\" = @username LIMIT 1;", command =>
+		{
+			command.Parameters.Add("@username", NpgsqlDbType.Text);
+		}, true);
 	}
 
 	public void SelectUser(string username)
 	{
-	    NpgsqlCommand cmd = Get(1, username);
-	    using (NpgsqlDataReader reader = cmd.ExecuteReader())
-	    {
-	        if (!reader.HasRows) { return; }
-	        while (reader.Read())
-	        {
-	            for (int i = 0; i < reader.FieldCount; ++i)
-	            {
-	                Console.Write(reader[i] + " ");
-	            }
-	            Console.WriteLine();
-	        }
-	    }  
+		NpgsqlCommand cmd = Get(1, username);
+		using (NpgsqlDataReader reader = cmd.ExecuteReader())
+		{
+			if (!reader.HasRows) { return; }
+			while (reader.Read())
+			{
+				for (int i = 0; i < reader.FieldCount; ++i)
+				{
+					Console.Write(reader[i] + " ");
+				}
+				Console.WriteLine();
+			}
+		}  
 	}
-	
+
 	public object GetColumnFromUser(string username, int column)
 	{
 		NpgsqlCommand cmd = Get(1, username);
 		using (NpgsqlDataReader reader = cmd.ExecuteReader())
 		{
-		    if (!reader.HasRows) { return null; }
-		    while (reader.Read())
-		    {
+			if (!reader.HasRows) { return null; }
+			while (reader.Read())
+			{
 			return reader[column];
-		    }
+			}
 		}
 		return null;
 	}
@@ -63,33 +63,33 @@ Program
 static void Main(string[] args)
 {
 	//static DatabaseManager for PostgreSQL
-    DatabaseManager<PostgreSQL>.Register(
-        5, 
-        () => new SemaphoreLockDatabaseIOPoolContainer<PostgreSQL>(5),
-        database => database.Connect());
-        
-    for (int i = 0; i < 2; i++)
-    {
-        DatabaseManager<PostgreSQL>.Lock(database => database.SelectUser("username"));
-    }
+	DatabaseManager<PostgreSQL>.Register(
+		5, 
+		() => new SemaphoreLockDatabaseIOPoolContainer<PostgreSQL>(5),
+		database => database.Connect());
 
-    Parallel.For(0, 10, i =>
-    {
-        DatabaseManager<PostgreSQL>.Lock(database => database.SelectUser("username"));
-    });
-    
-    //DatabaseManager for one or multiple Database Types
+	for (int i = 0; i < 2; i++)
+	{
+		DatabaseManager<PostgreSQL>.Lock(database => database.SelectUser("username"));
+	}
+
+	Parallel.For(0, 10, i =>
+	{
+		DatabaseManager<PostgreSQL>.Lock(database => database.SelectUser("username"));
+	});
+
+	//DatabaseManager for one or multiple Database Types
 	DatabaseManager mgr = new DatabaseManager();
 	mgr.Register<PostgreSQL>(
-	    5, 
-	    () => new SemaphoreLockDatabaseIOPoolContainer<PostgreSQL>(5), 
-	    database => database.Connect());
+		5, 
+		() => new SemaphoreLockDatabaseIOPoolContainer<PostgreSQL>(5), 
+		database => database.Connect());
 	Console.WriteLine("EXECUTE...");
 	for (int i = 0; i < 2; i++)
 	{
-	    Console.WriteLine(mgr.Lock<PostgreSQL, object>(database => database.GetColumnFromUser("username", 2)));
+		Console.WriteLine(mgr.Lock<PostgreSQL, object>(database => database.GetColumnFromUser("username", 2)));
 	}
-    Console.ReadKey();
+	Console.ReadKey();
 }
 ```
 
