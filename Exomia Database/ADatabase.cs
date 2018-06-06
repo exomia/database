@@ -91,12 +91,19 @@ namespace Exomia.Database
                 throw new NullDbConnectionException("the connection is null pls initialize the connection first.");
             }
 
-            if (string.IsNullOrEmpty(_connectionString))
+            if (!string.IsNullOrEmpty(_connection.ConnectionString))
+            {
+                _connectionString = _connection.ConnectionString;
+            }
+
+            else if (!string.IsNullOrEmpty(_connectionString))
+            {
+                _connection.ConnectionString = _connectionString;
+            }
+            else
             {
                 throw new NullDbConnectionStringException("the connection string is null.");
             }
-
-            _connection.ConnectionString = _connectionString;
 
             if (!_connection.OpenAsync().Wait(DATABASE_TIMEOUT))
             {

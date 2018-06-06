@@ -99,7 +99,7 @@ namespace Exomia.Database
                 }
             }
 
-            container.Dispose();
+            container?.Dispose();
         }
 
         /// <inheritdoc />
