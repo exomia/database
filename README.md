@@ -3,6 +3,8 @@
 
 exomia/database is a generic database manager with pooling & more
 
+![](https://img.shields.io/github/issues-pr/exomia/database.svg) ![](https://img.shields.io/github/issues/exomia/database.svg)  ![](https://img.shields.io/github/last-commit/exomia/database.svg) ![](https://img.shields.io/github/contributors/exomia/database.svg) ![](https://img.shields.io/github/commit-activity/y/exomia/database.svg) ![](https://img.shields.io/github/languages/top/exomia/database.svg) ![](https://img.shields.io/github/languages/count/exomia/database.svg) ![](https://img.shields.io/github/license/exomia/database.svg)
+
 ## Example
 
 Database
