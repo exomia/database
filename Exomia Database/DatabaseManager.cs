@@ -30,13 +30,7 @@ namespace Exomia.Database
     /// <inheritdoc />
     public sealed class DatabaseManager : IDatabaseManager
     {
-        #region Variables
-
         private readonly Dictionary<Type, IDatabasePoolContainer> _databaseIOPool;
-
-        #endregion
-
-        #region Constructors
 
         /// <summary>
         ///     DatabaseManager constructor
@@ -45,10 +39,6 @@ namespace Exomia.Database
         {
             _databaseIOPool = new Dictionary<Type, IDatabasePoolContainer>();
         }
-
-        #endregion
-
-        #region Methods
 
         /// <inheritdoc />
         public void Register<TDatabase>(int count, Func<IDatabasePoolContainer<TDatabase>> createIOPoolContainer = null,
@@ -136,8 +126,6 @@ namespace Exomia.Database
 
             return ((IDatabasePoolContainer<TDatabase>)container).Lock(func);
         }
-
-        #endregion
     }
 
     /// <summary>
@@ -147,13 +135,7 @@ namespace Exomia.Database
     public static class DatabaseManager<TDatabase>
         where TDatabase : IDatabase, new()
     {
-        #region Variables
-
         private static IDatabasePoolContainer<TDatabase> s_container;
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     <see
@@ -217,7 +199,5 @@ namespace Exomia.Database
 
             return s_container.Lock(func);
         }
-
-        #endregion
     }
 }

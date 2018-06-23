@@ -31,19 +31,12 @@ namespace Exomia.Database.IOPoolContainer
     public sealed class SpinWaitDatabaseIOPoolContainer<TDatabase> : IDatabasePoolContainer<TDatabase>
         where TDatabase : IDatabase
     {
-        #region Variables
-
         private List<TDatabase> _database;
         private Queue<TDatabase> _queue;
 
-        #endregion
-
-        #region Constructors
-
         /// <inheritdoc />
         public SpinWaitDatabaseIOPoolContainer()
-            :
-            this(CONSTANTS.DEFAULT_DATABASE_IO_POOL_SIZE) { }
+            : this(CONSTANTS.DEFAULT_DATABASE_IO_POOL_SIZE) { }
 
         /// <summary>
         ///     SpinWaitDatabaseIOPoolContainer constructor
@@ -54,10 +47,6 @@ namespace Exomia.Database.IOPoolContainer
             _database = new List<TDatabase>(capacity);
             _queue = new Queue<TDatabase>(capacity);
         }
-
-        #endregion
-
-        #region Methods
 
         /// <inheritdoc />
         public void Dispose()
@@ -135,7 +124,5 @@ namespace Exomia.Database.IOPoolContainer
 
             return result;
         }
-
-        #endregion
     }
 }

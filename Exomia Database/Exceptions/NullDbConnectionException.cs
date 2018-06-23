@@ -33,8 +33,6 @@ namespace Exomia.Database.Exceptions
     /// </summary>
     public class NullDbConnectionException : DbException
     {
-        #region Constructors
-
         /// <inheritdoc />
         /// <summary>
         ///     NullDbConnectionException constructor
@@ -66,7 +64,5 @@ namespace Exomia.Database.Exceptions
         /// <param name="innerException">inner exception</param>
         public NullDbConnectionException(string message, Exception innerException)
             : base(message, innerException) { }
-
-        #endregion
     }
 }

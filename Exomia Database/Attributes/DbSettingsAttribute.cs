@@ -33,13 +33,7 @@ namespace Exomia.Database.Attributes
     [AttributeUsage(AttributeTargets.Class)]
     public sealed class DbSettingsAttribute : Attribute
     {
-        #region Variables
-
         private string _connectionString;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     ConnectionString
@@ -50,10 +44,6 @@ namespace Exomia.Database.Attributes
             set { _connectionString = value; }
         }
 
-        #endregion
-
-        #region Constructors
-
         /// <inheritdoc />
         /// <summary>
         ///     DbSettingsAttribute constructor
@@ -62,7 +52,5 @@ namespace Exomia.Database.Attributes
         {
             _connectionString = connectionString;
         }
-
-        #endregion
     }
 }

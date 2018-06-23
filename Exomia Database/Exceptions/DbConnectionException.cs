@@ -33,8 +33,6 @@ namespace Exomia.Database.Exceptions
     /// </summary>
     public class DbConnectionException : DbException
     {
-        #region Constructors
-
         /// <inheritdoc />
         /// <summary>
         ///     DbConnectionException constructor
@@ -66,7 +64,5 @@ namespace Exomia.Database.Exceptions
         /// <param name="innerException">inner exception</param>
         public DbConnectionException(string message, Exception innerException)
             : base(message, innerException) { }
-
-        #endregion
     }
 }

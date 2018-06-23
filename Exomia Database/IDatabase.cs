@@ -33,8 +33,6 @@ namespace Exomia.Database
     /// </summary>
     public interface IDatabase : IDisposable
     {
-        #region Methods
-
         /// <summary>
         ///     Opens a connection to a database with the speciefied connection string
         /// </summary>
@@ -57,7 +55,5 @@ namespace Exomia.Database
         ///     close a opened connection
         /// </summary>
         void Close();
-
-        #endregion
     }
 }

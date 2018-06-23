@@ -31,14 +31,8 @@ namespace Exomia.Database.IOPoolContainer
     public sealed class MonitorWaitDatabaseIOPoolContainer<TDatabase> : IDatabasePoolContainer<TDatabase>
         where TDatabase : IDatabase
     {
-        #region Variables
-
         private List<TDatabase> _database;
         private Queue<TDatabase> _queue;
-
-        #endregion
-
-        #region Constructors
 
         /// <inheritdoc />
         public MonitorWaitDatabaseIOPoolContainer()
@@ -54,10 +48,6 @@ namespace Exomia.Database.IOPoolContainer
             _database = new List<TDatabase>(capacity);
             _queue = new Queue<TDatabase>(capacity);
         }
-
-        #endregion
-
-        #region Methods
 
         /// <inheritdoc />
         public void Dispose()
@@ -134,7 +124,5 @@ namespace Exomia.Database.IOPoolContainer
 
             return result;
         }
-
-        #endregion
     }
 }

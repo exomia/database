@@ -41,8 +41,6 @@ namespace Exomia.Database
     public interface IDatabasePoolContainer<TDatabase> : IDatabasePoolContainer
         where TDatabase : IDatabase
     {
-        #region Methods
-
         /// <summary>
         ///     adds a new database
         /// </summary>
@@ -68,7 +66,5 @@ namespace Exomia.Database
         /// <param name="func">the function to call</param>
         /// <returns>T2</returns>
         TResult Lock<TResult>(DatabaseFunction<TDatabase, TResult> func);
-
-        #endregion
     }
 }

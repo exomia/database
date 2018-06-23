@@ -31,15 +31,9 @@ namespace Exomia.Database.IOPoolContainer
     public sealed class SemaphoreLockDatabaseIOPoolContainer<TDatabase> : IDatabasePoolContainer<TDatabase>
         where TDatabase : IDatabase
     {
-        #region Variables
-
         private List<TDatabase> _database;
         private Queue<TDatabase> _queue;
         private SemaphoreSlim _semaphore;
-
-        #endregion
-
-        #region Constructors
 
         /// <inheritdoc />
         public SemaphoreLockDatabaseIOPoolContainer()
@@ -56,10 +50,6 @@ namespace Exomia.Database.IOPoolContainer
             _queue = new Queue<TDatabase>(capacity);
             _semaphore = new SemaphoreSlim(capacity, capacity);
         }
-
-        #endregion
-
-        #region Methods
 
         /// <inheritdoc />
         public void Dispose()
@@ -137,7 +127,5 @@ namespace Exomia.Database.IOPoolContainer
 
             return result;
         }
-
-        #endregion
     }
 }

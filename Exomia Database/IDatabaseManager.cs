@@ -31,8 +31,6 @@ namespace Exomia.Database
     /// </summary>
     public interface IDatabaseManager
     {
-        #region Methods
-
         /// <summary>
         ///     Register a new database IO pool
         /// </summary>
@@ -69,7 +67,5 @@ namespace Exomia.Database
         /// <returns>T2</returns>
         TResult Lock<TDatabase, TResult>(DatabaseFunction<TDatabase, TResult> func)
             where TDatabase : IDatabase;
-
-        #endregion
     }
 }

@@ -35,14 +35,10 @@ namespace Exomia.Database
     public abstract class ADatabase<TCommand> : IDatabase
         where TCommand : DbCommand, new()
     {
-        #region Variables
-
         /// <summary>
         ///     DATABASE_TIMEOUT
         /// </summary>
         protected const int DATABASE_TIMEOUT = 10000;
-
-        private Dictionary<int, TCommand> _commands;
 
         /// <summary>
         ///     connection
@@ -54,9 +50,7 @@ namespace Exomia.Database
         /// </summary>
         protected string _connectionString = string.Empty;
 
-        #endregion
-
-        #region Constructors
+        private Dictionary<int, TCommand> _commands;
 
         /// <summary>
         ///     ADatabase constructor
@@ -78,10 +72,6 @@ namespace Exomia.Database
         {
             Dispose(false);
         }
-
-        #endregion
-
-        #region Methods
 
         /// <inheritdoc />
         public void Connect()
@@ -246,8 +236,6 @@ namespace Exomia.Database
 
             return cmd;
         }
-
-        #endregion
 
         #region IDisposable Support
 
