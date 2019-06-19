@@ -27,42 +27,42 @@ using System.Data.Common;
 
 namespace Exomia.Database.Exceptions
 {
-    /// <inheritdoc />
-    /// <summary>
-    ///     NullDbConnectionException class
-    /// </summary>
-    public class NullDbConnectionException : DbException
-    {
-        /// <inheritdoc />
-        /// <summary>
-        ///     NullDbConnectionException constructor
-        /// </summary>
-        public NullDbConnectionException() { }
 
-        /// <inheritdoc />
+    /// <summary>
+    ///     Exception for signalling null database connection string errors.
+    /// </summary>
+    public class NullDbConnectionStringException : DbException
+    {
+
         /// <summary>
-        ///     NullDbConnectionException constructor
+        ///     Initializes a new instance of the <see cref="NullDbConnectionStringException"/> class.
         /// </summary>
-        /// <param name="message">mesaage</param>
-        public NullDbConnectionException(string message)
+        public NullDbConnectionStringException() { }
+
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="NullDbConnectionStringException"/> class.
+        /// </summary>
+        /// <param name="message"> The message. </param>
+        public NullDbConnectionStringException(string message)
             : base(message) { }
 
-        /// <inheritdoc />
+
         /// <summary>
-        ///     NullDbConnectionException constructor
+        ///     Initializes a new instance of the <see cref="NullDbConnectionStringException"/> class.
         /// </summary>
-        /// <param name="message">mesaage</param>
-        /// <param name="errorCode">error code</param>
-        public NullDbConnectionException(string message, int errorCode)
+        /// <param name="message">   The message. </param>
+        /// <param name="errorCode"> The error code. </param>
+        public NullDbConnectionStringException(string message, int errorCode)
             : base(message, errorCode) { }
 
-        /// <inheritdoc />
+
         /// <summary>
-        ///     NullDbConnectionException constructor
+        ///     Initializes a new instance of the <see cref="NullDbConnectionStringException"/> class.
         /// </summary>
-        /// <param name="message">mesaage</param>
-        /// <param name="innerException">inner exception</param>
-        public NullDbConnectionException(string message, Exception innerException)
+        /// <param name="message">        The message. </param>
+        /// <param name="innerException"> The inner exception. </param>
+        public NullDbConnectionStringException(string message, Exception innerException)
             : base(message, innerException) { }
     }
 }

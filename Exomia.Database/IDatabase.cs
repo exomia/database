@@ -23,48 +23,36 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
+using Exomia.Database.Exceptions;
 
 namespace Exomia.Database
 {
-    /// <inheritdoc />
-    /// <summary>
-    ///     IDatabasePoolContainer wrapper interface
-    /// </summary>
-    public interface IDatabasePoolContainer : IDisposable { }
 
-    /// <inheritdoc />
     /// <summary>
-    ///     IDatabasePoolContainer interface
+    ///     Interface for database.
     /// </summary>
-    /// <typeparam name="TDatabase">IDatabase</typeparam>
-    public interface IDatabasePoolContainer<TDatabase> : IDatabasePoolContainer
-        where TDatabase : IDatabase
+    public interface IDatabase : IDisposable
     {
         /// <summary>
-        ///     adds a new database
+        ///     Opens a connection to a database with the specified connection string.
         /// </summary>
-        /// <param name="database">database to add</param>
-        void Add(TDatabase database);
+        /// <exception cref="DbConnectionException">           if an error occured. </exception>
+        /// <exception cref="NullDbConnectionException">       if no connection is initialized. </exception>
+        /// <exception cref="NullDbConnectionStringException"> if connection string is null or empty. </exception>
+        void Connect();
 
         /// <summary>
-        ///     iterate over all added databases
+        ///     sets the connection string and call Connect() <see cref="Connect()" /> for details.
         /// </summary>
-        /// <returns>IEnumerable{TDatabase}</returns>
-        IEnumerable<TDatabase> Foreach();
+        /// <param name="connectionString"> The connection string to connect. </param>
+        /// <exception cref="DbConnectionException">           if an error occured. </exception>
+        /// <exception cref="NullDbConnectionException">       if no connection is initialized. </exception>
+        /// <exception cref="NullDbConnectionStringException"> if connection string is null or empty. </exception>
+        void Connect(string connectionString);
 
         /// <summary>
-        ///     Lock a database from the IO pool and perform an action on it
+        ///     close a opened connection.
         /// </summary>
-        /// <param name="action">the action to perform</param>
-        void Lock(DatabaseAction<TDatabase> action);
-
-        /// <summary>
-        ///     Lock a database from the IO pool and perform a function on it
-        /// </summary>
-        /// <typeparam name="TResult">function return value</typeparam>
-        /// <param name="func">the function to call</param>
-        /// <returns>T2</returns>
-        TResult Lock<TResult>(DatabaseFunction<TDatabase, TResult> func);
+        void Close();
     }
 }

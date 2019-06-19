@@ -1,6 +1,6 @@
 ﻿#region MIT License
 
-// Copyright (c) 2018 exomia - Daniel Bätz
+// Copyright (c) 2019 exomia - Daniel Bätz
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -27,39 +27,39 @@ using System.Threading;
 
 namespace Exomia.Database.IOPoolContainer
 {
-    /// <inheritdoc />
+    /// <summary>
+    ///     Container for monitor wait database i/o pools. This class cannot be inherited.
+    /// </summary>
+    /// <typeparam name="TDatabase"> Type of the database. </typeparam>
     public sealed class MonitorWaitDatabaseIOPoolContainer<TDatabase> : IDatabasePoolContainer<TDatabase>
         where TDatabase : IDatabase
     {
+        /// <summary>
+        ///     The database.
+        /// </summary>
         private List<TDatabase> _database;
-        private Queue<TDatabase> _queue;
-
-        /// <inheritdoc />
-        public MonitorWaitDatabaseIOPoolContainer()
-            :
-            this(CONSTANTS.DEFAULT_DATABASE_IO_POOL_SIZE) { }
 
         /// <summary>
-        ///     MonitorWaitDatabaseIOPoolContainer constructor
+        ///     The queue.
         /// </summary>
-        /// <param name="capacity">capacity</param>
+        private Queue<TDatabase> _queue;
+
+        /// <inheritdoc/>
+        public MonitorWaitDatabaseIOPoolContainer()
+            : this(CONSTANTS.DEFAULT_DATABASE_IO_POOL_SIZE) { }
+
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="MonitorWaitDatabaseIOPoolContainer{TDatabase}"/> class.
+        /// </summary>
+        /// <param name="capacity"> The capacity. </param>
         public MonitorWaitDatabaseIOPoolContainer(int capacity)
         {
             _database = new List<TDatabase>(capacity);
-            _queue = new Queue<TDatabase>(capacity);
+            _queue    = new Queue<TDatabase>(capacity);
         }
 
-        /// <inheritdoc />
-        public void Dispose()
-        {
-            _database.Clear();
-            _database = null;
-
-            _queue.Clear();
-            _queue = null;
-        }
-
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public void Add(TDatabase database)
         {
             lock (_queue)
@@ -69,7 +69,7 @@ namespace Exomia.Database.IOPoolContainer
             }
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public IEnumerable<TDatabase> Foreach()
         {
             foreach (TDatabase database in _database)
@@ -78,7 +78,7 @@ namespace Exomia.Database.IOPoolContainer
             }
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public void Lock(DatabaseAction<TDatabase> action)
         {
             TDatabase database;
@@ -101,7 +101,7 @@ namespace Exomia.Database.IOPoolContainer
             }
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public TResult Lock<TResult>(DatabaseFunction<TDatabase, TResult> func)
         {
             TDatabase database;
@@ -123,6 +123,16 @@ namespace Exomia.Database.IOPoolContainer
             }
 
             return result;
+        }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            _database.Clear();
+            _database = null;
+
+            _queue.Clear();
+            _queue = null;
         }
     }
 }

@@ -23,37 +23,37 @@
 #endregion
 
 using System;
-using Exomia.Database.Exceptions;
 
-namespace Exomia.Database
+namespace Exomia.Database.Attributes
 {
-    /// <inheritdoc />
+
     /// <summary>
-    ///     IDatabase interface
+    ///     Attribute for database settings. This class cannot be inherited.
     /// </summary>
-    public interface IDatabase : IDisposable
+    [AttributeUsage(AttributeTargets.Class)]
+    public sealed class DbSettingsAttribute : Attribute
     {
         /// <summary>
-        ///     Opens a connection to a database with the speciefied connection string
+        ///     The connection string.
         /// </summary>
-        /// <returns>true if the connection is successfull</returns>
-        /// <exception cref="DbConnectionException">if an error occured</exception>
-        /// <exception cref="NullDbConnectionException">if no connction is initialized</exception>
-        /// <exception cref="NullDbConnectionStringException">if connection string is null or empty</exception>
-        void Connect();
+        private string _connectionString;
 
         /// <summary>
-        ///     sets the connection string and call Connect() <see cref="Connect()" /> for details
+        ///     ConnectionString.
         /// </summary>
-        /// <returns>true if the connection is successfull</returns>
-        /// <exception cref="DbConnectionException">if an error occured</exception>
-        /// <exception cref="NullDbConnectionException">if no connction is initialized</exception>
-        /// <exception cref="NullDbConnectionStringException">if connection string is null or empty</exception>
-        void Connect(string connectionString);
+        /// <value>
+        ///     The connection string.
+        /// </value>
+        public string ConnectionString
+        {
+            get { return _connectionString; }
+            set { _connectionString = value; }
+        }
 
-        /// <summary>
-        ///     close a opened connection
-        /// </summary>
-        void Close();
+        /// <inheritdoc/>
+        public DbSettingsAttribute(string connectionString)
+        {
+            _connectionString = connectionString;
+        }
     }
 }

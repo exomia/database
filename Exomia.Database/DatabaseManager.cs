@@ -27,20 +27,25 @@ using System.Collections.Generic;
 
 namespace Exomia.Database
 {
-    /// <inheritdoc />
+    /// <summary>
+    ///     Manager for databases. This class cannot be inherited.
+    /// </summary>
     public sealed class DatabaseManager : IDatabaseManager
     {
+        /// <summary>
+        ///     The database i/o pool.
+        /// </summary>
         private readonly Dictionary<Type, IDatabasePoolContainer> _databaseIOPool;
 
         /// <summary>
-        ///     DatabaseManager constructor
+        ///     DatabaseManager constructor.
         /// </summary>
         public DatabaseManager()
         {
             _databaseIOPool = new Dictionary<Type, IDatabasePoolContainer>();
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public void Register<TDatabase>(int count, Func<IDatabasePoolContainer<TDatabase>> createIOPoolContainer = null,
             DatabaseAction<TDatabase> action = null)
             where TDatabase : IDatabase, new()
@@ -67,7 +72,7 @@ namespace Exomia.Database
             }
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public void Unregister<TDatabase>(DatabaseAction<TDatabase> action = null)
             where TDatabase : IDatabase
         {
@@ -92,7 +97,7 @@ namespace Exomia.Database
             container?.Dispose();
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public void Lock<TDatabase>(DatabaseAction<TDatabase> action)
             where TDatabase : IDatabase
         {
@@ -109,7 +114,7 @@ namespace Exomia.Database
             ((IDatabasePoolContainer<TDatabase>)container).Lock(action);
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public TResult Lock<TDatabase, TResult>(DatabaseFunction<TDatabase, TResult> func)
             where TDatabase : IDatabase
         {
@@ -128,19 +133,28 @@ namespace Exomia.Database
         }
     }
 
+
     /// <summary>
-    ///     DatabaseManager static class
+    ///     Manager for databases.
     /// </summary>
-    /// <typeparam name="TDatabase"></typeparam>
+    /// <typeparam name="TDatabase"> Type of the database. </typeparam>
     public static class DatabaseManager<TDatabase>
         where TDatabase : IDatabase, new()
     {
+        /// <summary>
+        ///     The container.
+        /// </summary>
         private static IDatabasePoolContainer<TDatabase> s_container;
 
         /// <summary>
         ///     <see
-        ///         cref="IDatabaseManager.Register{TDatabase}(int, Func{IDatabasePoolContainer{TDatabase}}, DatabaseAction{TDatabase})" />
+        ///         cref="IDatabaseManager.Register{TDatabase}(int,
+        ///         Func{IDatabasePoolContainer{TDatabase}}, DatabaseAction{TDatabase})" />
         /// </summary>
+        /// <param name="count">                 Number of. </param>
+        /// <param name="createIOPoolContainer"> (Optional) The create i/o pool container. </param>
+        /// <param name="action">                (Optional) The action. </param>
+        /// <exception cref="ArgumentNullException"> Thrown when one or more required arguments are null. </exception>
         public static void Register(int count, Func<IDatabasePoolContainer<TDatabase>> createIOPoolContainer = null,
             DatabaseAction<TDatabase> action = null)
         {
@@ -157,6 +171,7 @@ namespace Exomia.Database
         /// <summary>
         ///     <see cref="IDatabaseManager.Unregister{TDatabase}(DatabaseAction{TDatabase})" />
         /// </summary>
+        /// <param name="action"> (Optional) The action. </param>
         public static void Unregister(DatabaseAction<TDatabase> action = null)
         {
             foreach (TDatabase database in s_container.Foreach())
@@ -171,6 +186,8 @@ namespace Exomia.Database
         /// <summary>
         ///     <see cref="IDatabaseManager.Lock{TDatabase}(DatabaseAction{TDatabase})" />
         /// </summary>
+        /// <param name="action"> The action. </param>
+        /// <exception cref="ArgumentNullException"> Thrown when one or more required arguments are null. </exception>
         public static void Lock(DatabaseAction<TDatabase> action)
         {
             if (s_container == null)
@@ -187,6 +204,12 @@ namespace Exomia.Database
         /// <summary>
         ///     <see cref="IDatabaseManager.Lock{TDatabase, TResult}(DatabaseFunction{TDatabase, TResult})" />
         /// </summary>
+        /// <typeparam name="TResult"> Type of the result. </typeparam>
+        /// <param name="func"> The function. </param>
+        /// <returns>
+        ///     A TResult.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"> Thrown when one or more required arguments are null. </exception>
         public static TResult Lock<TResult>(DatabaseFunction<TDatabase, TResult> func)
         {
             if (s_container == null)

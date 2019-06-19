@@ -27,36 +27,40 @@ using System.Threading;
 
 namespace Exomia.Database.IOPoolContainer
 {
-    /// <inheritdoc />
-    public sealed class SemaphoreLockDatabaseIOPoolContainer<TDatabase> : IDatabasePoolContainer<TDatabase>
+    /// <summary>
+    ///     Container for spin wait database i/o pools. This class cannot be inherited.
+    /// </summary>
+    /// <typeparam name="TDatabase"> Type of the database. </typeparam>
+    public sealed class SpinWaitDatabaseIOPoolContainer<TDatabase> : IDatabasePoolContainer<TDatabase>
         where TDatabase : IDatabase
     {
+        /// <summary>
+        ///     The database.
+        /// </summary>
         private List<TDatabase> _database;
+        /// <summary>
+        ///     The queue.
+        /// </summary>
         private Queue<TDatabase> _queue;
-        private SemaphoreSlim _semaphore;
 
-        /// <inheritdoc />
-        public SemaphoreLockDatabaseIOPoolContainer()
-            :
-            this(CONSTANTS.DEFAULT_DATABASE_IO_POOL_SIZE) { }
+        /// <inheritdoc/>
+        public SpinWaitDatabaseIOPoolContainer()
+            : this(CONSTANTS.DEFAULT_DATABASE_IO_POOL_SIZE) { }
+
 
         /// <summary>
-        ///     SemaphoreLockDatabaseIOPoolContainer constructor
+        ///     Initializes a new instance of the <see cref="SpinWaitDatabaseIOPoolContainer{TDatabase}"/> class.
         /// </summary>
-        /// <param name="capacity">capacity</param>
-        public SemaphoreLockDatabaseIOPoolContainer(int capacity)
+        /// <param name="capacity"> The capacity. </param>
+        public SpinWaitDatabaseIOPoolContainer(int capacity)
         {
             _database = new List<TDatabase>(capacity);
             _queue = new Queue<TDatabase>(capacity);
-            _semaphore = new SemaphoreSlim(capacity, capacity);
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public void Dispose()
         {
-            _semaphore.Dispose();
-            _semaphore = null;
-
             _database.Clear();
             _database = null;
 
@@ -64,7 +68,7 @@ namespace Exomia.Database.IOPoolContainer
             _queue = null;
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public void Add(TDatabase database)
         {
             lock (_queue)
@@ -74,7 +78,7 @@ namespace Exomia.Database.IOPoolContainer
             }
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public IEnumerable<TDatabase> Foreach()
         {
             foreach (TDatabase database in _database)
@@ -83,16 +87,19 @@ namespace Exomia.Database.IOPoolContainer
             }
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public void Lock(DatabaseAction<TDatabase> action)
         {
             TDatabase database;
 
-            _semaphore.Wait();
-
-            lock (_queue)
+            lock (this)
             {
-                database = _queue.Dequeue();
+                SpinWait.SpinUntil(() => { return _queue.Count > 0; });
+
+                lock (_queue)
+                {
+                    database = _queue.Dequeue();
+                }
             }
 
             action.Invoke(database);
@@ -101,29 +108,29 @@ namespace Exomia.Database.IOPoolContainer
             {
                 _queue.Enqueue(database);
             }
-
-            _semaphore.Release();
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public TResult Lock<TResult>(DatabaseFunction<TDatabase, TResult> func)
         {
             TDatabase database;
 
-            _semaphore.Wait();
-
-            lock (_queue)
+            lock (this)
             {
-                database = _queue.Dequeue();
+                SpinWait.SpinUntil(() => { return _queue.Count > 0; });
+
+                lock (_queue)
+                {
+                    database = _queue.Dequeue();
+                }
             }
+
             TResult result = func.Invoke(database);
 
             lock (_queue)
             {
                 _queue.Enqueue(database);
             }
-
-            _semaphore.Release();
 
             return result;
         }

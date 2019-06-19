@@ -31,29 +31,35 @@ using Exomia.Database.Exceptions;
 
 namespace Exomia.Database
 {
-    /// <inheritdoc />
+    /// <summary>
+    ///     A database.
+    /// </summary>
+    /// <typeparam name="TCommand"> Type of the command. </typeparam>
     public abstract class ADatabase<TCommand> : IDatabase
         where TCommand : DbCommand, new()
     {
         /// <summary>
-        ///     DATABASE_TIMEOUT
+        ///     DATABASE_TIMEOUT.
         /// </summary>
         protected const int DATABASE_TIMEOUT = 10000;
 
         /// <summary>
-        ///     connection
+        ///     connection.
         /// </summary>
         protected DbConnection _connection;
 
         /// <summary>
-        ///     connectionString
+        ///     connectionString.
         /// </summary>
         protected string _connectionString = string.Empty;
 
+        /// <summary>
+        ///     The commands.
+        /// </summary>
         private Dictionary<int, TCommand> _commands;
 
         /// <summary>
-        ///     ADatabase constructor
+        ///     ADatabase constructor.
         /// </summary>
         protected ADatabase()
         {
@@ -66,14 +72,14 @@ namespace Exomia.Database
         }
 
         /// <summary>
-        ///     ADatabase destructor
+        ///     ADatabase destructor.
         /// </summary>
         ~ADatabase()
         {
             Dispose(false);
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public void Connect()
         {
             if (!CreateConnection(out _connection) || _connection == null)
@@ -110,14 +116,14 @@ namespace Exomia.Database
             PrepareCommands();
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public void Connect(string connectionString)
         {
             _connectionString = connectionString;
             Connect();
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public void Close()
         {
             _connection?.Close();
@@ -125,35 +131,37 @@ namespace Exomia.Database
         }
 
         /// <summary>
-        ///     create a new database connection
+        ///     create a new database connection.
         /// </summary>
-        /// <param name="connection">out DbConnection</param>
-        /// <returns><c>true</c> if succesfully created; <c>false</c> otherwise</returns>
+        /// <param name="connection"> [out] out DbConnection. </param>
+        /// <returns>
+        ///     <c>true</c> if succesfully created; <c>false</c> otherwise.
+        /// </returns>
         protected abstract bool CreateConnection(out DbConnection connection);
 
         /// <summary>
-        ///     called than a new connection is established
+        ///     called than a new connection is established.
         /// </summary>
         protected virtual void OnConnected() { }
 
         /// <summary>
-        ///     called than a connection is closed
+        ///     called than a connection is closed.
         /// </summary>
         protected virtual void OnClosed() { }
 
         /// <summary>
-        ///     called after a valid connection is established
+        ///     called after a valid connection is established.
         /// </summary>
         protected abstract void PrepareCommands();
 
         /// <summary>
-        ///     Add a new Command to the command list
-        ///     the command will be prepared after action
+        ///     Add a new Command to the command list the command will be prepared after action.
         /// </summary>
-        /// <param name="index">index</param>
-        /// <param name="query">query</param>
-        /// <param name="action">action</param>
-        /// <param name="prepare">true if prepare command; false oherwise</param>
+        /// <param name="index">   index. </param>
+        /// <param name="query">   query. </param>
+        /// <param name="action">  (Optional) action. </param>
+        /// <param name="prepare"> (Optional) true if prepare command; false oherwise. </param>
+        /// <exception cref="NullReferenceException"> Thrown when a value was unexpectedly null. </exception>
         protected void Add(int index, string query, PrepareDbCommand<TCommand> action = null, bool prepare = true)
         {
             if (_connection == null)
@@ -178,14 +186,13 @@ namespace Exomia.Database
         }
 
         /// <summary>
-        ///     Add a new database command to the command list
-        ///     the command will be prepared after action
+        ///     Add a new database command to the command list the command will be prepared after action.
         /// </summary>
-        /// <typeparam name="TPrim">struct, IConvertible</typeparam>
-        /// <param name="index">index</param>
-        /// <param name="query">query</param>
-        /// <param name="action">action</param>
-        /// <param name="prepare">true if prepare command; false oherwise</param>
+        /// <typeparam name="TPrim"> struct, IConvertible. </typeparam>
+        /// <param name="index">   index. </param>
+        /// <param name="query">   query. </param>
+        /// <param name="action">  (Optional) action. </param>
+        /// <param name="prepare"> (Optional) true if prepare command; false oherwise. </param>
         protected void Add<TPrim>(TPrim index, string query, PrepareDbCommand<TCommand> action = null,
             bool prepare = true)
             where TPrim : struct, IConvertible
@@ -194,11 +201,14 @@ namespace Exomia.Database
         }
 
         /// <summary>
-        ///     get a database command from the command list
+        ///     get a database command from the command list.
         /// </summary>
-        /// <param name="index">index</param>
-        /// <param name="args">arguments</param>
-        /// <returns></returns>
+        /// <param name="index"> index. </param>
+        /// <param name="args">  arguments. </param>
+        /// <returns>
+        ///     A TCommand.
+        /// </returns>
+        /// <exception cref="KeyNotFoundException"> Thrown when a Key Not Found error condition occurs. </exception>
         protected TCommand Get(int index, params object[] args)
         {
             if (!_commands.TryGetValue(index, out TCommand cmd))
@@ -215,12 +225,15 @@ namespace Exomia.Database
         }
 
         /// <summary>
-        ///     get a database command from the command list
+        ///     get a database command from the command list.
         /// </summary>
-        /// <typeparam name="TPrim">struct, IConvertible</typeparam>
-        /// <param name="index">index</param>
-        /// <param name="args">arguments</param>
-        /// <returns></returns>
+        /// <typeparam name="TPrim"> struct, IConvertible. </typeparam>
+        /// <param name="index"> index. </param>
+        /// <param name="args">  arguments. </param>
+        /// <returns>
+        ///     A TCommand.
+        /// </returns>
+        /// <exception cref="KeyNotFoundException"> Thrown when a Key Not Found error condition occurs. </exception>
         protected TCommand Get<TPrim>(TPrim index, params object[] args)
             where TPrim : struct, IConvertible
         {
@@ -240,12 +253,12 @@ namespace Exomia.Database
         #region IDisposable Support
 
         /// <summary>
-        ///     true if the instance is allready disposed; false otherwise
+        ///     true if the instance is allready disposed; false otherwise.
         /// </summary>
         protected bool _disposed;
 
         /// <summary>
-        ///     call to dispose the instance
+        ///     call to dispose the instance.
         /// </summary>
         public void Dispose()
         {
@@ -253,6 +266,10 @@ namespace Exomia.Database
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        ///     call to dispose the instance.
+        /// </summary>
+        /// <param name="disposing"> true if user code; false called by finalizer. </param>
         private void Dispose(bool disposing)
         {
             if (!_disposed)
@@ -274,9 +291,9 @@ namespace Exomia.Database
         }
 
         /// <summary>
-        ///     called then the instance is disposing
+        ///     called then the instance is disposing.
         /// </summary>
-        /// <param name="disposing">true if user code; false called by finalizer</param>
+        /// <param name="disposing"> true if user code; false called by finalizer. </param>
         protected virtual void OnDispose(bool disposing) { }
 
         #endregion
