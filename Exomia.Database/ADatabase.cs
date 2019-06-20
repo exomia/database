@@ -1,24 +1,10 @@
-﻿#region MIT License
+﻿#region License
 
-// Copyright (c) 2018 exomia - Daniel Bätz
+// Copyright (c) 2018-2019, exomia
+// All rights reserved.
 // 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
 
 #endregion
 
@@ -79,7 +65,7 @@ namespace Exomia.Database
             Dispose(false);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void Connect()
         {
             if (!CreateConnection(out _connection) || _connection == null)
@@ -116,14 +102,14 @@ namespace Exomia.Database
             PrepareCommands();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void Connect(string connectionString)
         {
             _connectionString = connectionString;
             Connect();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void Close()
         {
             _connection?.Close();
@@ -169,11 +155,7 @@ namespace Exomia.Database
                 throw new NullReferenceException("the connection is null pls initialize the connection first!");
             }
 
-            TCommand cmd = new TCommand
-            {
-                CommandText = query,
-                Connection = _connection
-            };
+            TCommand cmd = new TCommand { CommandText = query, Connection = _connection };
 
             action?.Invoke(cmd);
 
@@ -194,7 +176,7 @@ namespace Exomia.Database
         /// <param name="action">  (Optional) action. </param>
         /// <param name="prepare"> (Optional) true if prepare command; false oherwise. </param>
         protected void Add<TPrim>(TPrim index, string query, PrepareDbCommand<TCommand> action = null,
-            bool prepare = true)
+                                  bool  prepare = true)
             where TPrim : struct, IConvertible
         {
             Add((int)Convert.ChangeType(index, typeof(int)), query, action, prepare);

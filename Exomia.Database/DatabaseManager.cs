@@ -1,24 +1,10 @@
-﻿#region MIT License
+﻿#region License
 
-// Copyright (c) 2018 exomia - Daniel Bätz
+// Copyright (c) 2018-2019, exomia
+// All rights reserved.
 // 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
 
 #endregion
 
@@ -45,9 +31,10 @@ namespace Exomia.Database
             _databaseIOPool = new Dictionary<Type, IDatabasePoolContainer>();
         }
 
-        /// <inheritdoc/>
-        public void Register<TDatabase>(int count, Func<IDatabasePoolContainer<TDatabase>> createIOPoolContainer = null,
-            DatabaseAction<TDatabase> action = null)
+        /// <inheritdoc />
+        public void Register<TDatabase>(int                                     count,
+                                        Func<IDatabasePoolContainer<TDatabase>> createIOPoolContainer = null,
+                                        DatabaseAction<TDatabase>               action                = null)
             where TDatabase : IDatabase, new()
         {
             IDatabasePoolContainer container = null;
@@ -72,7 +59,7 @@ namespace Exomia.Database
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void Unregister<TDatabase>(DatabaseAction<TDatabase> action = null)
             where TDatabase : IDatabase
         {
@@ -97,7 +84,7 @@ namespace Exomia.Database
             container?.Dispose();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void Lock<TDatabase>(DatabaseAction<TDatabase> action)
             where TDatabase : IDatabase
         {
@@ -114,7 +101,7 @@ namespace Exomia.Database
             ((IDatabasePoolContainer<TDatabase>)container).Lock(action);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public TResult Lock<TDatabase, TResult>(DatabaseFunction<TDatabase, TResult> func)
             where TDatabase : IDatabase
         {
@@ -132,7 +119,6 @@ namespace Exomia.Database
             return ((IDatabasePoolContainer<TDatabase>)container).Lock(func);
         }
     }
-
 
     /// <summary>
     ///     Manager for databases.
@@ -155,8 +141,9 @@ namespace Exomia.Database
         /// <param name="createIOPoolContainer"> (Optional) The create i/o pool container. </param>
         /// <param name="action">                (Optional) The action. </param>
         /// <exception cref="ArgumentNullException"> Thrown when one or more required arguments are null. </exception>
-        public static void Register(int count, Func<IDatabasePoolContainer<TDatabase>> createIOPoolContainer = null,
-            DatabaseAction<TDatabase> action = null)
+        public static void Register(int                                     count,
+                                    Func<IDatabasePoolContainer<TDatabase>> createIOPoolContainer = null,
+                                    DatabaseAction<TDatabase>               action                = null)
         {
             s_container = createIOPoolContainer?.Invoke() ?? throw new ArgumentNullException(nameof(s_container));
 
