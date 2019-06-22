@@ -35,7 +35,10 @@ namespace Exomia.Database.Attributes
             set { _connectionString = value; }
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="DbSettingsAttribute" /> class.
+        /// </summary>
+        /// <param name="connectionString"> The connection string. </param>
         public DbSettingsAttribute(string connectionString)
         {
             _connectionString = connectionString;

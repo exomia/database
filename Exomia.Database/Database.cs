@@ -21,7 +21,7 @@ namespace Exomia.Database
     ///     A database.
     /// </summary>
     /// <typeparam name="TCommand"> Type of the command. </typeparam>
-    public abstract class ADatabase<TCommand> : IDatabase
+    public abstract class Database<TCommand> : IDatabase
         where TCommand : DbCommand, new()
     {
         /// <summary>
@@ -45,9 +45,9 @@ namespace Exomia.Database
         private Dictionary<int, TCommand> _commands;
 
         /// <summary>
-        ///     ADatabase constructor.
+        ///     Initializes a new instance of the <see cref="Database{TCommand}" /> class.
         /// </summary>
-        protected ADatabase()
+        protected Database()
         {
             _commands = new Dictionary<int, TCommand>();
 
@@ -58,9 +58,9 @@ namespace Exomia.Database
         }
 
         /// <summary>
-        ///     ADatabase destructor.
+        ///     Finalizes an instance of the <see cref="Database{TCommand}" /> class.
         /// </summary>
-        ~ADatabase()
+        ~Database()
         {
             Dispose(false);
         }
@@ -121,7 +121,7 @@ namespace Exomia.Database
         /// </summary>
         /// <param name="connection"> [out] out DbConnection. </param>
         /// <returns>
-        ///     <c>true</c> if succesfully created; <c>false</c> otherwise.
+        ///     <c>true</c> if successfully created; <c>false</c> otherwise.
         /// </returns>
         protected abstract bool CreateConnection(out DbConnection connection);
 
@@ -146,7 +146,7 @@ namespace Exomia.Database
         /// <param name="index">   index. </param>
         /// <param name="query">   query. </param>
         /// <param name="action">  (Optional) action. </param>
-        /// <param name="prepare"> (Optional) true if prepare command; false oherwise. </param>
+        /// <param name="prepare"> (Optional) true if prepare command; false otherwise. </param>
         /// <exception cref="NullReferenceException"> Thrown when a value was unexpectedly null. </exception>
         protected void Add(int index, string query, PrepareDbCommand<TCommand> action = null, bool prepare = true)
         {
@@ -174,7 +174,7 @@ namespace Exomia.Database
         /// <param name="index">   index. </param>
         /// <param name="query">   query. </param>
         /// <param name="action">  (Optional) action. </param>
-        /// <param name="prepare"> (Optional) true if prepare command; false oherwise. </param>
+        /// <param name="prepare"> (Optional) true if prepare command; false otherwise. </param>
         protected void Add<TPrim>(TPrim index, string query, PrepareDbCommand<TCommand> action = null,
                                   bool  prepare = true)
             where TPrim : struct, IConvertible

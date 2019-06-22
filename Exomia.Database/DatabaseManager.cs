@@ -24,7 +24,7 @@ namespace Exomia.Database
         private readonly Dictionary<Type, IDatabasePoolContainer> _databaseIOPool;
 
         /// <summary>
-        ///     DatabaseManager constructor.
+        ///     Initializes a new instance of the <see cref="DatabaseManager" /> class.
         /// </summary>
         public DatabaseManager()
         {
@@ -37,7 +37,7 @@ namespace Exomia.Database
                                         DatabaseAction<TDatabase>               action                = null)
             where TDatabase : IDatabase, new()
         {
-            IDatabasePoolContainer container = null;
+            IDatabasePoolContainer container;
 
             lock (_databaseIOPool)
             {
@@ -63,7 +63,7 @@ namespace Exomia.Database
         public void Unregister<TDatabase>(DatabaseAction<TDatabase> action = null)
             where TDatabase : IDatabase
         {
-            IDatabasePoolContainer container = null;
+            IDatabasePoolContainer container;
 
             lock (_databaseIOPool)
             {
@@ -90,7 +90,7 @@ namespace Exomia.Database
         {
             if (action == null) { throw new ArgumentNullException(nameof(action), "the action can't be null"); }
 
-            IDatabasePoolContainer container = null;
+            IDatabasePoolContainer container;
             lock (_databaseIOPool)
             {
                 if (!_databaseIOPool.TryGetValue(typeof(TDatabase), out container))
@@ -107,7 +107,7 @@ namespace Exomia.Database
         {
             if (func == null) { throw new ArgumentNullException(nameof(func), "the function can't be null"); }
 
-            IDatabasePoolContainer container = null;
+            IDatabasePoolContainer container;
             lock (_databaseIOPool)
             {
                 if (!_databaseIOPool.TryGetValue(typeof(TDatabase), out container))
@@ -134,8 +134,7 @@ namespace Exomia.Database
 
         /// <summary>
         ///     <see
-        ///         cref="IDatabaseManager.Register{TDatabase}(int,
-        ///         Func{IDatabasePoolContainer{TDatabase}}, DatabaseAction{TDatabase})" />
+        ///         cref="IDatabaseManager.Register{TDatabase}(int, Func{IDatabasePoolContainer{TDatabase}}, DatabaseAction{TDatabase})" />
         /// </summary>
         /// <param name="count">                 Number of. </param>
         /// <param name="createIOPoolContainer"> (Optional) The create i/o pool container. </param>

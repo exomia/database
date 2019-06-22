@@ -35,7 +35,9 @@ namespace Exomia.Database.IOPoolContainer
         /// </summary>
         private SemaphoreSlim _semaphore;
 
-        /// <inheritdoc />
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="SemaphoreLockDatabaseIOPoolContainer{TDatabase}" /> class.
+        /// </summary>
         public SemaphoreLockDatabaseIOPoolContainer()
             :
             this(CONSTANTS.DEFAULT_DATABASE_IO_POOL_SIZE) { }

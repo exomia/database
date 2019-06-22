@@ -30,7 +30,9 @@ namespace Exomia.Database.IOPoolContainer
         /// </summary>
         private Queue<TDatabase> _queue;
 
-        /// <inheritdoc />
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="MonitorWaitDatabaseIOPoolContainer{TDatabase}" /> class.
+        /// </summary>
         public MonitorWaitDatabaseIOPoolContainer()
             : this(CONSTANTS.DEFAULT_DATABASE_IO_POOL_SIZE) { }
 
